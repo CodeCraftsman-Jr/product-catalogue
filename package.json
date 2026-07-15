@@ -1,0 +1,31 @@
+{
+  "name": "product-catalogue",
+  "version": "1.0.0",
+  "description": "Product Catalogue Microservice - TDD & BDD Final Project",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "mocha tests/**/*.test.js --timeout 10000",
+    "test:models": "mocha tests/models/*.test.js --timeout 10000",
+    "test:routes": "mocha tests/routes/*.test.js --timeout 10000",
+    "test:bdd": "cucumber-js features/ --publish-quiet",
+    "coverage": "c8 --reporter=text --reporter=lcov mocha tests/**/*.test.js --timeout 10000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "sequelize": "^6.31.0",
+    "sqlite3": "^5.1.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.0",
+    "@cucumber/cucumber": "^9.3.0",
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0",
+    "sinon": "^15.2.0",
+    "selenium-webdriver": "^4.11.0"
+  }
+}
