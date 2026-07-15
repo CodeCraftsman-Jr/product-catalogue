@@ -118,26 +118,26 @@ describe('Product Routes', () => {
   });
 
   describe('List products by availability', () => {
-    it('should filter in-stock products', async () => {
-      await ProductFactory.create({ name: 'A', inStock: true });
-      await ProductFactory.create({ name: 'B', inStock: false });
-      await ProductFactory.create({ name: 'C', inStock: true });
+    it('should filter available products', async () => {
+      await ProductFactory.create({ name: 'A', available: true });
+      await ProductFactory.create({ name: 'B', available: false });
+      await ProductFactory.create({ name: 'C', available: true });
       const res = await chai.request(app).get('/products/search/availability/true');
       expect(res).to.have.status(200);
       expect(res.body.length).to.equal(2);
       res.body.forEach(p => {
-        expect(p.inStock).to.be.true;
+        expect(p.available).to.be.true;
       });
     });
 
-    it('should filter out-of-stock products', async () => {
-      await ProductFactory.create({ name: 'D', inStock: false });
-      await ProductFactory.create({ name: 'E', inStock: true });
+    it('should filter unavailable products', async () => {
+      await ProductFactory.create({ name: 'D', available: false });
+      await ProductFactory.create({ name: 'E', available: true });
       const res = await chai.request(app).get('/products/search/availability/false');
       expect(res).to.have.status(200);
       expect(res.body.length).to.equal(1);
       res.body.forEach(p => {
-        expect(p.inStock).to.be.false;
+        expect(p.available).to.be.false;
       });
     });
   });

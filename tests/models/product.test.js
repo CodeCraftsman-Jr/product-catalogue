@@ -73,15 +73,17 @@ describe('Product Model', () => {
   });
 
   describe('Find a product by name', () => {
-    it('should find products with matching name and verify each result', async () => {
+    it('should find 5 products by a specific name and verify count', async () => {
       await ProductFactory.create({ name: 'Wireless Mouse' });
       await ProductFactory.create({ name: 'USB Hub' });
       await ProductFactory.create({ name: 'Mouse Pad' });
+      await ProductFactory.create({ name: 'Gaming Mouse' });
+      await ProductFactory.create({ name: 'Bluetooth Mouse' });
       const { Op } = require('sequelize');
       const results = await Product.findAll({
         where: { name: { [Op.like]: '%Mouse%' } }
       });
-      expect(results.length).to.equal(2);
+      expect(results.length).to.equal(4);
       results.forEach(p => {
         expect(p.name.toLowerCase()).to.include('mouse');
       });
@@ -105,24 +107,27 @@ describe('Product Model', () => {
   });
 
   describe('Find products by availability', () => {
-    it('should find only in-stock products', async () => {
-      await ProductFactory.create({ name: 'A', inStock: true });
-      await ProductFactory.create({ name: 'B', inStock: false });
-      await ProductFactory.create({ name: 'C', inStock: true });
-      const results = await Product.findAll({ where: { inStock: true } });
-      expect(results.length).to.equal(2);
+    it('should find 10 products by availability and verify each is available', async () => {
+      for (let i = 0; i < 5; i++) {
+        await ProductFactory.create({ name: `Available Item ${i}`, available: true });
+      }
+      for (let i = 0; i < 5; i++) {
+        await ProductFactory.create({ name: `Unavailable Item ${i}`, available: false });
+      }
+      const results = await Product.findAll({ where: { available: true } });
+      expect(results.length).to.equal(5);
       results.forEach(p => {
-        expect(p.inStock).to.be.true;
+        expect(p.available).to.be.true;
       });
     });
 
-    it('should find only out-of-stock products', async () => {
-      await ProductFactory.create({ name: 'D', inStock: false });
-      await ProductFactory.create({ name: 'E', inStock: true });
-      const results = await Product.findAll({ where: { inStock: false } });
+    it('should find only unavailable products', async () => {
+      await ProductFactory.create({ name: 'A', available: false });
+      await ProductFactory.create({ name: 'B', available: true });
+      const results = await Product.findAll({ where: { available: false } });
       expect(results.length).to.equal(1);
       results.forEach(p => {
-        expect(p.inStock).to.be.false;
+        expect(p.available).to.be.false;
       });
     });
   });

@@ -28,10 +28,9 @@ const Product = sequelize.define('Product', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  inStock: {
+  available: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true,
-    field: 'in_stock'
+    defaultValue: true
   },
   imageUrl: {
     type: DataTypes.STRING,

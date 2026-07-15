@@ -97,12 +97,12 @@ router.get('/search/category/:category', async (req, res) => {
   }
 });
 
-// List products by availability (inStock)
+// List products by availability
 router.get('/search/availability/:status', async (req, res) => {
   try {
-    const inStock = req.params.status === 'true' || req.params.status === '1';
+    const available = req.params.status === 'true' || req.params.status === '1';
     const products = await Product.findAll({
-      where: { inStock }
+      where: { available }
     });
     return res.status(200).json(products);
   } catch (err) {

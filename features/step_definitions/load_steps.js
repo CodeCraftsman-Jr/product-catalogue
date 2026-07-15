@@ -14,7 +14,7 @@ Given('the following products exist in the catalogue', async function (dataTable
       name: product.name,
       category: product.category,
       price: parseFloat(product.price),
-      inStock: product.inStock === 'true',
+      available: product.available === 'true',
       description: product.description
     });
   }
