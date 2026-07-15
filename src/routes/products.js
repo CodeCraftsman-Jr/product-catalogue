@@ -4,6 +4,14 @@ const { Product } = require('../models/product');
 
 const router = express.Router();
 
+function checkContentType(req, res, next) {
+  const contentType = req.headers['content-type'];
+  if (!contentType || !contentType.includes('application/json')) {
+    return res.status(415).json({ error: 'Content-Type must be application/json' });
+  }
+  next();
+}
+
 // Create a product
 router.post('/', async (req, res) => {
   try {
@@ -38,7 +46,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a product
-router.put('/:id', async (req, res) => {
+router.put('/:id', checkContentType, async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) {
@@ -59,7 +67,7 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
     await product.destroy();
-    return res.status(200).json({ message: 'Product deleted' });
+    return res.status(204).send();
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -69,9 +77,7 @@ router.delete('/:id', async (req, res) => {
 router.get('/search/name/:name', async (req, res) => {
   try {
     const products = await Product.findAll({
-      where: {
-        name: { [Op.like]: `%${req.params.name}%` }
-      }
+      where: { name: { [Op.like]: `%${req.params.name}%` } }
     });
     return res.status(200).json(products);
   } catch (err) {
@@ -83,9 +89,7 @@ router.get('/search/name/:name', async (req, res) => {
 router.get('/search/category/:category', async (req, res) => {
   try {
     const products = await Product.findAll({
-      where: {
-        category: { [Op.like]: `%${req.params.category}%` }
-      }
+      where: { category: { [Op.like]: `%${req.params.category}%` } }
     });
     return res.status(200).json(products);
   } catch (err) {

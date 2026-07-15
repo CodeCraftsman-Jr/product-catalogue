@@ -14,31 +14,47 @@ Feature: Product Catalogue Management
       | Coffee Maker    | Home        | 79    | false   | 12-cup programmable  |
 
   Scenario: Read a product by ID
-    When I request the product with ID 1
-    Then I should see the product details for "Laptop Pro"
+    When I search for products with name "Laptop Pro"
+    And I click the "Search" button
+    Then I should see the product "Laptop Pro" in the search results
+    And the product details should show name "Laptop Pro", description "High performance", available "true", category "Electronics", and price "1299"
 
   Scenario: Update a product
-    Given I request the product with ID 2
-    When I update the product name to "Running Shoes Pro" and price to 99
-    Then the product should now be named "Running Shoes Pro" with price 99
+    When I search for products with name "Running Shoes"
+    And I click the "Search" button
+    Then I should see the product "Running Shoes" in the search results
+    When I update the product name to "Running Shoes Pro"
+    Then I should see the success message "Product updated"
+    And I should see the text "Running Shoes Pro" in the search results
+    And I should not see the text "Running Shoes" in the search results
 
   Scenario: Delete a product
-    Given I request the product with ID 3
-    When I delete the product
-    Then the product should no longer exist in the catalogue
+    When I search for products with name "Desk Lamp"
+    And I click the "Search" button
+    Then I should see the product "Desk Lamp" in the search results
+    When I delete the product "Desk Lamp"
+    Then I should see the success message "Product deleted"
+    And I should not see the text "Desk Lamp" in the search results
 
   Scenario: List all products
-    When I request the list of all products
-    Then I should see all 6 products in the catalogue
-
-  Scenario: Search products by name
-    When I search for products with name "Mouse"
-    Then I should see 1 product matching "Mouse"
+    When I press the "Clear" button
+    And I click the "Search" button
+    Then I should see 6 products in the search results
 
   Scenario: Search products by category
-    When I search for products in category "Electronics"
+    When I press the "Clear" button
+    And I select "Electronics" from the category dropdown
+    And I click the "Search" button
     Then I should see 2 products in the "Electronics" category
 
   Scenario: Search products by availability
-    When I search for available products
+    When I press the "Clear" button
+    And I select "true" from the availability dropdown
+    And I click the "Search" button
     Then I should see 4 products that are in stock
+
+  Scenario: Search products by name
+    When I set the product name to "Mouse"
+    And I click the "Search" button
+    Then I should see the success message "Product found"
+    And I should see the text "Wireless Mouse" in the search results
